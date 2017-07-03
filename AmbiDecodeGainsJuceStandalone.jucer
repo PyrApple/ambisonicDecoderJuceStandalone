@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="an2O9P" name="AmbiDecodeGainsExporter" displaySplashScreen="1"
+              reportAppUsage="1" splashScreenColour="Dark" projectType="guiapp"
+              version="1.0.0" bundleIdentifier="com.yourcompany.NewProject"
+              includeBinaryInAppConfig="1" jucerVersion="5.0.2">
+  <MAINGROUP id="ZqsaGM" name="AmbiDecodeGainsExporter">
+    <GROUP id="{F71C6848-3F20-E8A5-C3EC-0AF138ABB8E0}" name="Images">
+      <FILE id="jxz6Jj" name="3dti_logo.png" compile="0" resource="1" file="Data/img/3dti_logo.png"/>
+      <FILE id="ZAqkt6" name="icl_logo.png" compile="0" resource="1" file="Data/img/icl_logo.png"/>
+    </GROUP>
+    <GROUP id="{39BF5D14-7ECE-04A8-619C-BFD0FE3C8727}" name="Source">
+      <FILE id="WWq8QV" name="AmbisonicDecoder.h" compile="0" resource="0"
+            file="Source/AmbisonicDecoder.h"/>
+      <FILE id="RTB9QK" name="Display.h" compile="0" resource="0" file="Source/Display.h"/>
+      <FILE id="Zxoknr" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+      <FILE id="pT7NVd" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="iI3o50" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="ijWRTw" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
+      <FILE id="J7GCv3" name="XmlConfigImporter.h" compile="0" resource="0"
+            file="Source/XmlConfigImporter.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="AmbiDecodeGainsExporter_DEBUG"
+                       headerPath="/usr/local/include" libraryPath="/usr/local/lib"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="AmbiDecodeGainsExporter"
+                       headerPath="/usr/local/include"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>

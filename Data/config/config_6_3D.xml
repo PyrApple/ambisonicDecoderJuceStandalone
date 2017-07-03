@@ -1,0 +1,12 @@
+
+<?xml version="1.0"?>
+<speakerconfig>
+
+  <speaker conv="xyz"> 1, 0, 0 </speaker>
+  <speaker conv="xyz"> -1, 0, 0 </speaker>
+  <speaker conv="xyz"> 0, 1, 0 </speaker>
+  <speaker conv="xyz"> 0, -1, 0 </speaker>
+  <speaker conv="xyz"> 0, 0, 1 </speaker>
+  <speaker conv="xyz"> 0, 0, -1 </speaker>
+
+</speakerconfig>
