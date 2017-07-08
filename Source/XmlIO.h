@@ -1,17 +1,17 @@
-#ifndef XMLCONFIGIMPORTER_H_INCLUDED
-#define XMLCONFIGIMPORTER_H_INCLUDED
+#ifndef XMLIO_H_INCLUDED
+#define XMLIO_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Utils.h"
 #include <vector>
 
-class XmlConfigImporter
+class XmlIO
 {
 public:
     
-    XmlConfigImporter(){}
+    XmlIO(){}
     
-    ~XmlConfigImporter() {}
+    ~XmlIO() {}
     
     // import xml config from file into speakers
     void importConfig( const File & file, std::vector<Speaker> & speakers )
@@ -75,14 +75,54 @@ public:
         
     }
     
+    void saveConfig( const File & file, const std::vector<Speaker> & speakers, const Eigen::MatrixXf ambiGains ){
+        
+        // create output string: loop over speakers
+        String data = "<speakergains order='" + String( getMaxAmbiOrder(ambiGains.cols()) ) + "'>\n";
+        for( int i = 0; i < speakers.size(); i++ ){
+            
+            // add speaker id
+            data += "\n\t<speaker>\n";
+            // data += String( speakers[i].id ) + ", ";
+            
+            // add speaker pos (cartesian)
+            data += "\t\t<pos conv='xyz'> ";
+            Eigen::Vector3f p = sphericalToCartesian(speakers[i].aed);
+            for( int j = 0; j < p.size(); j++ ){ if( std::abs(p[j]) < 10e-7 ){ p[j] = 0; } } // round
+            for( int j = 0; j < p.size(); j++ ){
+                data += String(p[j]);
+                if( j < p.size() - 1){ data += ", "; }
+            }
+            data += " </pos>\n";
+            
+            // add speaker gains
+            data += "\t\t<gains> ";
+            for( int j = 0; j < ambiGains.cols(); j++ ){
+                data += String(ambiGains(i,j));
+                if( j < ambiGains.cols() - 1){ data += ", "; }
+            }
+            data += " </gains>\n";
+            
+            // end line
+            data += "\t</speaker>\n";
+        }
+        data += "\n</speakergains>";
+        
+        // write to file
+        file.replaceWithText ( data );
+        
+        // notify user
+        AlertWindow::showMessageBoxAsync( AlertWindow::InfoIcon, "file export", ".xml file saved to desktop", "OK" );
+    }
+    
     // display xml import error
     void alertWindow( const String& msg )
     {
         AlertWindow::showMessageBoxAsync( AlertWindow::WarningIcon, "Corrupted configuration file", msg, "OK" );
     }
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XmlConfigImporter)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XmlIO)
     
 };
 
-#endif // XMLCONFIGIMPORTER_H_INCLUDED
+#endif // XMLIO_H_INCLUDED

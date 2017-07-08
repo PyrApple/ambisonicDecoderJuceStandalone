@@ -1,5 +1,6 @@
 #include "MainComponent.h"
 #include "Utils.h"
+#include <cmath>
 
 MainContentComponent::MainContentComponent()
 {
@@ -10,7 +11,7 @@ MainContentComponent::MainContentComponent()
     buttonMap.insert({
         { &openConfigButton, "Open config file (.xml)" },
         { &openDisplayButton, "Display speakers config" },
-        { &exportGainsButton, "Export gains to desktop (.csv)" }
+        { &exportGainsButton, "Export gains (.xml)" }
     });
     for( auto& pair : buttonMap )
     {
@@ -112,7 +113,7 @@ void MainContentComponent::buttonClicked( Button* button )
 void MainContentComponent::loadConfigFromFile( File & file )
 {
     // import content of xml file to speakers
-    xmlConfigImporter.importConfig( file, speakers );
+    xmlIO.importConfig( file, speakers );
     
     // skip remaining if no speaker found in config
     if( speakers.size() == 0 ){
@@ -172,30 +173,9 @@ void MainContentComponent::displaySpeakerConfigWindow()
 // save content of data to desktop in fileName, format: SpkID, x, y, z, gW, gX, gY, ...
 void MainContentComponent::exportGains()
 {
-    // create output string: loop over speakers
-    String data = "";
-    for( int i = 0; i < speakers.size(); i++ ){
-        
-        // add speaker id
-        data += String( speakers[i].id ) + ", ";
-        
-        // add speaker pos (cartesian)
-        Eigen::Vector3f p = sphericalToCartesian(speakers[i].aed);
-        for( int j = 0; j < p.size(); j++ ){ data += String(p[j]) + ", "; }
-        
-        // add speaker gains
-        for( int j = 0; j < ambiGains.cols(); j++ ){
-            data += String(ambiGains(i,j));
-            if( j < ambiGains.cols() - 1){ data += ", "; }
-        }
-        
-        // end line
-        data += "\n";
-    }
-    
     // get export file
-    const File file (File::getSpecialLocation (File::userDesktopDirectory).getNonexistentChildFile ("AmbiGains", ".csv"));
+    const File file (File::getSpecialLocation (File::userDesktopDirectory).getNonexistentChildFile ("AmbiGains", ".xml"));
     
-    // write to file
-    file.replaceWithText ( data );
+    // save gains to xml file
+    xmlIO.saveConfig( file, speakers, ambiGains );
 }

@@ -18,8 +18,7 @@
       <FILE id="pT7NVd" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="iI3o50" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="ijWRTw" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
-      <FILE id="J7GCv3" name="XmlConfigImporter.h" compile="0" resource="0"
-            file="Source/XmlConfigImporter.h"/>
+      <FILE id="J7GCv3" name="XmlIO.h" compile="0" resource="0" file="Source/XmlIO.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

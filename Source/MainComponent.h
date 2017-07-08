@@ -10,7 +10,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#include "XmlConfigImporter.h"
+#include "XmlIO.h"
 #include "Utils.h"
 #include "Display.h"
 #include "AmbisonicDecoder.h"
@@ -60,7 +60,7 @@ public:
     SafePointer< DocumentWindow > displayWindow;
     
     // speaker config
-    XmlConfigImporter xmlConfigImporter;
+    XmlIO xmlIO;
     std::vector< Speaker > speakers;
     
     // ambisonic decoder
