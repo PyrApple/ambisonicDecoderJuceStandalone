@@ -131,8 +131,8 @@ void MainContentComponent::loadConfigFromFile( File & file )
     // format speaker pos to matrix to use in Ambi decode
     Eigen::MatrixXf spkAzimElev( 2, speakers.size() );
     for( int i = 0; i < speakers.size(); i++ ){
-        spkAzimElev(0,i) = speakers[i].aed[0];
-        spkAzimElev(1,i) = speakers[i].aed[1];
+        spkAzimElev(0,i) = rad2deg( speakers[i].aed[0] );
+        spkAzimElev(1,i) = rad2deg( speakers[i].aed[1] );
     }
     
     // get max ambisonic order
