@@ -43,7 +43,7 @@ public:
                 convention = spkElmt->getAttributeValue(0);
             }
             if( convention != "xyz"  && convention != "aed" ){
-                alertWindow("wrong convention " + convention);
+                alertWindow("wrong coordinate convention " + convention);
                 return;
             }
             
