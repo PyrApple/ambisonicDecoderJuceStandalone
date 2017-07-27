@@ -41,9 +41,9 @@ public:
         for( int i = 0; i < speakers.size(); i++ ){
             Eigen::Vector3f p = sphericalToCartesian( speakers[i].aed );
             // draw view side
-            drawSpeaker( g, getWidth()/4.f, originY, p[0], p[1], speakers[i].id);
+            drawSpeaker( g, getWidth()/4.f, originY, -p[1], -p[0], speakers[i].id);
             // draw view top
-            drawSpeaker( g, getWidth()*(3.f/4.f), originY, p[0], p[2], speakers[i].id);
+            drawSpeaker( g, getWidth()*(3.f/4.f), originY, -p[1], -p[2], speakers[i].id);
         }
         
         // view legends
@@ -52,21 +52,21 @@ public:
         g.drawText("view side", margin, h, w, 10, Justification::left);
         g.drawText("view top", getWidth() - w - margin, h, w, 10, Justification::right);
         
-        // view axis: horizontal X
+        // view axis: horizontal Y
         float L = 40.f; h -= 10.f;
-        g.setColour( Colours::red );
-        g.drawLine( margin, h, margin+L, h, 1.0f ); // left-X
-        g.drawText( "X", 2*margin+L, h-10, 10, 10, Justification::left ); // left-X
-        g.drawLine( getWidth() - L - 2*margin - 10, h, getWidth() - 2*margin - 10, h, 1.0f ); // right-X
-        g.drawText( "X", getWidth() - margin - 10, h-10, 10, 10, Justification::left ); // right-X
+        g.setColour( Colours::lightgreen );
+        g.drawLine( margin, h, margin+L, h, 1.0f ); // left-Y
+        g.drawText( "Y", margin, h-15, 10, 10, Justification::left );
+        g.drawLine( getWidth() - L - 2*margin - 10, h, getWidth() - 2*margin - 10, h, 1.0f ); // right-Y
+        g.drawText( "Y", getWidth() - margin - 20 - L, h-15, 10, 10, Justification::left );
         
         // view axis: vertical Y/Z
-        g.setColour( Colours::lightgreen );
-        g.drawLine( margin, h, margin, h-L, 1.0f ); // left-Y
-        g.drawText( "Y", margin, h-L-10, 10, 10, Justification::left ); // left-Y
-        g.setColour( Colours::lightblue );
-        g.drawLine( getWidth() - L - 2*margin - 10, h, getWidth() - L - 2*margin - 10, h-L, 1.0f ); // right-Z
-        g.drawText( "Z", getWidth() - L - 2*margin - 10, h-L-10, 10, 10, Justification::left ); // right-Z
+        g.setColour( Colours::red );
+        g.drawLine( margin+L, h, margin+L, h-L, 1.0f ); // left-X
+        g.drawText( "X", margin+L-15, h-L, 10, 10, Justification::left );
+        g.setColour( Colours::aliceblue );
+        g.drawLine( getWidth() - 2*margin - 10, h, getWidth() - 2*margin - 10, h-L, 1.0f ); // right-Z
+        g.drawText( "Z", getWidth() - 2*margin - 25, h-L, 10, 10, Justification::left ); // right-Z
     }
     
     // draw speakers as circles on screen

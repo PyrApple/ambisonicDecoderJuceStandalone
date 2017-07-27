@@ -34,15 +34,16 @@ inline unsigned int getMaxAmbiOrder( const unsigned int numSpk )
     return round( sqrt( numSpk) - 1 );
 }
 
-// SPAT convention: azimuth in (xOy) 0° is facing y, clockwise,
+// coordinate convention: X front, Y left, Z up.
+// azimuth in (xOy) 0° is facing x, clockwise,
 // elevation in (zOx), 0° is on (xOy), 90° on z+, -90° on z-
 
 inline Eigen::Vector3f cartesianToSpherical(const Eigen::Vector3f& p)
 {
     float radius = std::sqrt(p(0) * p(0) + p(1) * p(1) + p(2) * p(2));
     float elevation = std::asin(p(2) / radius);
-    float azimuth = std::atan2(p(0), p(1));
-    if (p(0) < 0 && p(2) < 0)
+    float azimuth = std::atan2(p(1), p(0));
+    if (p(1) < 0 && p(2) < 0)
         elevation += 2 * M_PI;
     
     return Eigen::Vector3f (azimuth, elevation, radius);
@@ -50,8 +51,8 @@ inline Eigen::Vector3f cartesianToSpherical(const Eigen::Vector3f& p)
 
 inline Eigen::Vector3f sphericalToCartesian(const Eigen::Vector3f& p)
 {
-    float x = p[2] * sin(p[0]) * cos(p[1]);
-    float y = p[2] * cos(p[0]) * cos(p[1]);
+    float x = p[2] * cos(p[0]) * cos(p[1]);
+    float y = p[2] * sin(p[0]) * cos(p[1]);
     float z = p[2] * sin(p[1]);
     
     return Eigen::Vector3f (x, y, z);
