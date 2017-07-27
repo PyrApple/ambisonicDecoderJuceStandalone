@@ -143,6 +143,14 @@ void MainContentComponent::loadConfigFromFile( File & file )
     ambiGains = ambisonicDecoder.getDecodingMatrix( spkAzimElev, order, useEpad );
     rmNearZero( ambiGains, 10e-7 );
     
+    // apply distance gain compensation
+    for( int i = 0; i < speakers.size(); i++ ){
+        float distNorm = pow( speakers[i].aed[2], 2 );
+        for( int j = 0; j < ambiGains.cols(); j++ ){
+            ambiGains(i,j) *= distNorm;
+        }
+    }
+    
     // write matrix to log window
     std::stringstream buffer;
     buffer << ambiGains << std::endl;
