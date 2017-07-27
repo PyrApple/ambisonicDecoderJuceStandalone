@@ -7,6 +7,8 @@
   <MAINGROUP id="ZqsaGM" name="AmbiDecodeGainsExporter">
     <GROUP id="{F71C6848-3F20-E8A5-C3EC-0AF138ABB8E0}" name="Images">
       <FILE id="jxz6Jj" name="3dti_logo.png" compile="0" resource="1" file="Data/img/3dti_logo.png"/>
+      <FILE id="Oyvumj" name="ambisonicLogo.png" compile="0" resource="1"
+            file="Data/img/ambisonicLogo.png"/>
       <FILE id="ZAqkt6" name="icl_logo.png" compile="0" resource="1" file="Data/img/icl_logo.png"/>
     </GROUP>
     <GROUP id="{39BF5D14-7ECE-04A8-619C-BFD0FE3C8727}" name="Source">
@@ -22,12 +24,13 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="">
+    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="" smallIcon="Oyvumj">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="AmbiDecodeGainsExporter_DEBUG"
-                       headerPath="/usr/local/include" libraryPath="/usr/local/lib"/>
+                       headerPath="/usr/local/include" libraryPath="/usr/local/lib"
+                       osxCompatibility="10.10 SDK"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="AmbiDecodeGainsExporter"
-                       headerPath="/usr/local/include"/>
+                       headerPath="/usr/local/include" osxCompatibility="10.10 SDK"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../../../../WorkSpace/Juce_Workspace/juce-grapefruit-osx/modules"/>
