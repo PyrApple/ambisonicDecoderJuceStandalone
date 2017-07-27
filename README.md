@@ -4,7 +4,7 @@ Export Ambisonic gains for irregular speaker configurations standalone. Based on
 
 ## How to use
 
-Define speaker configuration in a xml file, coordinates system is either carthesian ``xyz`` (in meters) or spherical ``aed`` (azimuth, elevation, in degrees, distance in meters):
+Define speaker configuration in a xml file, coordinates system is either Cartesian ``xyz`` (in meters) or Spherical ``aed`` (azimuth, elevation, in degrees, distance in meters):
 
 ```xml
 <speakerconfig>
@@ -49,7 +49,7 @@ install on OSX:
 brew install eigen boost
 ```
 
-## Acknowledgements
+## Acknowledgments
 
 Library developed with the Imperial College of London - Dyson School of Design and Engineering, as part of the [3D-Tune-In project](http://3d-tune-in.eu/), who received fundings from the European Union’s Horizon 2020 research and innovation programme under grant agreement No 644051.
 
