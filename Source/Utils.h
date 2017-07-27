@@ -57,6 +57,17 @@ inline Eigen::Vector3f sphericalToCartesian(const Eigen::Vector3f& p)
     return Eigen::Vector3f (x, y, z);
 }
 
+inline void rmNearZero( Eigen::MatrixXf& m, float threshold)
+{
+    for( int i = 0; i < m.rows(); i++){
+        for( int j = 0; j < m.cols(); j++){
+            if( std::abs(m(i,j)) < threshold ){ m(i,j) = 0; }
+        }
+    }
+}
+
+
+
 template <typename Type>
 inline Type deg2rad(Type deg) { return deg * M_PI / 180.0; }
 

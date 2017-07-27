@@ -141,6 +141,7 @@ void MainContentComponent::loadConfigFromFile( File & file )
     // get decoding matrix
     bool useEpad = true;
     ambiGains = ambisonicDecoder.getDecodingMatrix( spkAzimElev, order, useEpad );
+    rmNearZero( ambiGains, 10e-7 );
     
     // write matrix to log window
     std::stringstream buffer;
