@@ -113,7 +113,8 @@ void MainContentComponent::buttonClicked( Button* button )
 void MainContentComponent::loadConfigFromFile( File & file )
 {
     // import content of xml file to speakers
-    xmlIO.importConfig( file, speakers );
+    bool importSucess = xmlIO.importConfig( file, speakers );
+    if( !importSucess ){ return; }
     
     // skip remaining if no speaker found in config
     if( speakers.size() == 0 ){

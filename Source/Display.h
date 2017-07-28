@@ -76,7 +76,7 @@ public:
         g.setColour( colourMain );
         g.fillEllipse( spkX - spkRad, spkY - spkRad, spkRad, spkRad );
         g.setColour( colourMain );
-        g.drawText( String(id), spkX, spkY, 20, 10, Justification::left );
+        g.drawText( String(id), spkX, spkY, 30, 10, Justification::left );
     }
     
     void closeButtonPressed() override { delete this; }

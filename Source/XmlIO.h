@@ -14,7 +14,7 @@ public:
     ~XmlIO() {}
     
     // import xml config from file into speakers
-    void importConfig( const File & file, std::vector<Speaker> & speakers )
+    bool importConfig( const File & file, std::vector<Speaker> & speakers )
     {
         // parse XML
         XmlDocument mainDocument( file );
@@ -26,7 +26,7 @@ public:
         if (mainElement == 0)
         {
             alertWindow(mainDocument.getLastParseError());
-            return;
+            return false;
         }
         
         // resize input spk vector
@@ -35,30 +35,48 @@ public:
         
         // loop over xml elements (speakers)
         unsigned int count = 0;
+        bool isValidXmlFile = true;
         forEachXmlChildElementWithTagName(*mainElement, spkElmt, "speaker")
         {
-            // get convention: xyz or aed
-            String convention = "xyz";
-            if( spkElmt->getNumAttributes() == 1 ){
-                convention = spkElmt->getAttributeValue(0);
-            }
-            if( convention != "xyz"  && convention != "aed" ){
-                alertWindow("wrong coordinate convention " + convention);
-                return;
+            // create speaker
+            Speaker spk;
+            
+            // sanity check
+            if( spkElmt->getNumAttributes() != 2 ){
+                alertWindow("wrong number of attributes in spk definition");
+                isValidXmlFile = false;
             }
             
+            // get convention: xyz or aed and spk id
+            String convention = "xyz";
+            for( int i = 0; i < spkElmt->getNumAttributes(); i++ ){
+                if( spkElmt->getAttributeName(i) == "conv" ){
+                    convention = spkElmt->getAttributeValue(i);
+                    if( convention != "xyz"  && convention != "aed" ){
+                        alertWindow("wrong coordinate convention " + convention);
+                        isValidXmlFile = false;
+                    }
+                }
+                else if( spkElmt->getAttributeName(i) == "id" ){
+                    spk.id = spkElmt->getAttributeValue(i).getIntValue();
+                }
+                else{
+                    alertWindow("wrong spk attribute: " + spkElmt->getAttributeName(i));
+                    isValidXmlFile = false;
+                }
+            }
+            
+            // discard if xml file not valid
+            if( !isValidXmlFile ){ return false; }
+
             // get xyz / aed coordinates
             StringArray coordArray;
             coordArray.addTokens (spkElmt->getAllSubText(), ",", "\"");
             if( coordArray.size() != 3 ){
-                alertWindow("wrong number of coordinates for speaker " + String(count));
-                return;
+                alertWindow("wrong number of coordinates for speaker " + String(spk.id));
+                return false;
             }
             Eigen::Vector3f coord(coordArray[0].getDoubleValue(), coordArray[1].getDoubleValue(), coordArray[2].getDoubleValue());
-            
-            // create speaker
-            Speaker spk;
-            spk.id = count;
             
             // convert xyz to aed
             if( convention == "xyz" ){ spk.aed = cartesianToSpherical(coord); }
@@ -69,9 +87,11 @@ public:
             }
             
             // store and increment
-            speakers[spk.id] = spk;
+            speakers[count] = spk;
             count += 1;
         }
+        
+        return true;
         
     }
     
@@ -82,8 +102,7 @@ public:
         for( int i = 0; i < speakers.size(); i++ ){
             
             // add speaker id
-            data += "\n\t<speaker>\n";
-            // data += String( speakers[i].id ) + ", ";
+            data += "\n\t<speaker id='" + String( speakers[i].id ) + "'>\n";
             
             // add speaker pos (cartesian)
             data += "\t\t<pos conv='xyz'> ";
