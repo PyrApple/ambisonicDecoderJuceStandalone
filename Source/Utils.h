@@ -67,10 +67,26 @@ inline void rmNearZero( Eigen::MatrixXf& m, float threshold)
     }
 }
 
-
+inline float rmNearZero( float val, float threshold)
+{
+    if( std::abs( val ) < threshold ){ return 0; }
+    else{ return val; }
+}
 
 template <typename Type>
 inline Type deg2rad(Type deg) { return deg * M_PI / 180.0; }
 
+inline Eigen::Vector3f deg2radVect(Eigen::Vector3f vect) {
+    vect[0] = deg2rad(vect[0]);
+    vect[1] = deg2rad(vect[1]);
+    return vect;
+}
+
 template <typename Type>
 inline Type rad2deg(Type rad) { return rad * 180.0 / M_PI; }
+
+inline Eigen::Vector3f rad2degVect(Eigen::Vector3f vect) {
+    vect[0] = rad2deg(vect[0]);
+    vect[1] = rad2deg(vect[1]);
+    return vect;
+}

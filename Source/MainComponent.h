@@ -13,6 +13,7 @@
 #include "XmlIO.h"
 #include "Utils.h"
 #include "Display.h"
+#include "SpeakerTree.h"
 #include "AmbisonicDecoder.h"
 
 #include <vector>
@@ -49,11 +50,14 @@ public:
     
     // GUI components
     TextButton openConfigButton;
+    TextButton exportConfigButton;
     TextButton openDisplayButton;
     TextButton exportGainsButton;
+    TextButton addSpkButton;
     TextEditor logTextBox;
     Image logo3dtiImage;
     Image logoIclImage;
+    SpeakerTree speakerTree;
     
     // misc.
     std::unordered_map< Button*, std::string > buttonMap;

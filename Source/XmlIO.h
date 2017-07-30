@@ -81,9 +81,7 @@ public:
             // convert xyz to aed
             if( convention == "xyz" ){ spk.aed = cartesianToSpherical(coord); }
             else{
-                spk.aed = coord;
-                spk.aed[0] = deg2rad(spk.aed[0]);
-                spk.aed[1] = deg2rad(spk.aed[1]);
+                spk.aed = deg2radVect( coord );
             }
             
             // store and increment

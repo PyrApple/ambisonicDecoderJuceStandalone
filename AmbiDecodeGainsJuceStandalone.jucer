@@ -19,6 +19,8 @@
             file="Source/MainComponent.cpp"/>
       <FILE id="pT7NVd" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="iI3o50" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="ou5LHR" name="SpeakerTree.h" compile="0" resource="0" file="Source/SpeakerTree.h"/>
+      <FILE id="xEgblK" name="SpeakerTree.cpp" compile="1" resource="0" file="Source/SpeakerTree.cpp"/>
       <FILE id="ijWRTw" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
       <FILE id="J7GCv3" name="XmlIO.h" compile="0" resource="0" file="Source/XmlIO.h"/>
     </GROUP>

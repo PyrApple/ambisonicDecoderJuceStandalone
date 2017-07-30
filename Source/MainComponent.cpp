@@ -10,8 +10,10 @@ MainContentComponent::MainContentComponent()
     // text buttons
     buttonMap.insert({
         { &openConfigButton, "Open config file (.xml)" },
+        { &exportConfigButton, "Export config file (.xml)" },
         { &openDisplayButton, "Display speakers config" },
-        { &exportGainsButton, "Export gains (.xml)" }
+        { &exportGainsButton, "Export gains (.xml)" },
+        { &addSpkButton, "+" }
     });
     for( auto& pair : buttonMap )
     {
@@ -35,6 +37,9 @@ MainContentComponent::MainContentComponent()
     logTextBox.setColour( TextEditor::textColourId, colourMain );
     logTextBox.setColour( TextEditor::backgroundColourId, Colours::transparentBlack );
     logTextBox.setColour( TextEditor::outlineColourId, colourMain );
+    
+    // speaker tree
+    addAndMakeVisible( speakerTree );
     
     // images
     logo3dtiImage = ImageCache::getFromMemory( BinaryData::_3dti_logo_png, BinaryData::_3dti_logo_pngSize );
@@ -78,9 +83,24 @@ void MainContentComponent::resized()
     openDisplayButton.setBounds( openConfigButton.getX() + w + margin, margin,  w, h );
     exportGainsButton.setBounds( openDisplayButton.getX() + w + margin, margin,  w, h );
     
-    // log window
+    // speaker tree
     float y = 2*margin + openConfigButton.getY() + openConfigButton.getHeight();
+    addSpkButton.setBounds( getWidth() - margin, y, 20, 20 );
+    speakerTree.setBounds(margin, y, getWidth() - 2*margin, 100.0f);
+    
+    // log window
+    y = 2*margin + speakerTree.getY() + speakerTree.getHeight();
     logTextBox.setBounds( margin, y, getWidth() - 2*margin, getHeight() - y - margin );
+    
+    // debug
+    speakerTree.getConfiguration( speakers );
+    for( int i = 0; i < speakers.size(); i++ ){
+        for( int j = 0; j < 3; j++ ){
+            std::cout << speakers[i].aed[j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    
 }
 
 void MainContentComponent::buttonClicked( Button* button )
@@ -106,6 +126,12 @@ void MainContentComponent::buttonClicked( Button* button )
     else if( button == &exportGainsButton )
     {
         exportGains();
+    }
+
+    // export Ambisonic gains to desktop
+    else if( button == &addSpkButton )
+    {
+        speakerTree.addSpkItem();
     }
 }
 
