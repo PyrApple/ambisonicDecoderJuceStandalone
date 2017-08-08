@@ -3,7 +3,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Utils.h"
-#include <vector>
 
 class XmlIO
 {
@@ -124,7 +123,6 @@ public:
     void writeGains( const File & file, const std::vector<Speaker> & speakers, const Eigen::MatrixXf ambiGains ){
         
         // create output string: loop over speakers
-        std::cout << getMaxAmbiOrder( ambiGains.cols() ) << std::endl;
         String data = "<speakergains order='" + String( getMaxAmbiOrder(ambiGains.cols()) ) + "'>\n";
         for( int i = 0; i < speakers.size(); i++ ){
             

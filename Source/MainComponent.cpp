@@ -92,16 +92,6 @@ void MainContentComponent::resized()
     // log window
     y = 2*margin + speakerTree.getY() + speakerTree.getHeight();
     logTextBox.setBounds( margin, y, getWidth() - 2*margin, getHeight() - y - margin );
-    
-    
-    // debug, TODELETE once speakerTree.getConfiguration integrated
-    speakerTree.getConfiguration( speakers );
-    for( int i = 0; i < speakers.size(); i++ ){
-        for( int j = 0; j < 3; j++ ){
-            std::cout << speakers[i].aed[j] << " ";
-        }
-        std::cout << std::endl;
-    }
 }
 
 void MainContentComponent::buttonClicked( Button* button )

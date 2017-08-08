@@ -16,9 +16,6 @@
 #include "SpeakerTree.h"
 #include "AmbisonicDecoder.h"
 
-#include <vector>
-#include <unordered_map>
-
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all

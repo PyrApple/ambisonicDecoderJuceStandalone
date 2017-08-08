@@ -2,6 +2,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include <eigen3/Eigen/Dense>
+#include <vector>
+#include <unordered_map>
 
 // define colours
 const Colour colourBkg(PixelARGB(250, 40, 40, 40));
