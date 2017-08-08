@@ -93,23 +93,6 @@ Eigen::Vector3f SpeakerTreeComponent::getCoords()
     return coords;
 }
 
-//void SpeakerTreeComponent::getConfiguration( Speaker & spk )
-//{
-//    // get id
-//    spk.id = itemId;
-//
-//    // get coords
-//    Eigen::Vector3f coords = getCoords();
-//
-//    // convert xyz to aed
-//    if( convention.getText() == "xyz" ){
-//        spk.aed = cartesianToSpherical(coords);
-//    }
-//    else{
-//        spk.aed = deg2radVect( coords );
-//    }
-//}
-
 void SpeakerTreeComponent::buttonClicked( Button* button )
 {
     owner.removeSpkItem();
@@ -145,6 +128,7 @@ void SpeakerTreeComponent::labelTextChanged (Label *labelThatHasChanged)
     if( convention.getText() == "xyz" ){ coords = cartesianToSpherical(coords); }
     else{ coords = deg2radVect( coords ); }
     owner.speaker.aed = coords;
+    std::cout << coords << std::endl;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,11 +136,11 @@ void SpeakerTreeComponent::labelTextChanged (Label *labelThatHasChanged)
 SpeakerTreeItem::SpeakerTreeItem( const Speaker & _speaker, SpeakerTreeItemHolder & _owner ): owner(_owner)
 {
     speaker = _speaker;
+    convention = "aed";
 }
 
 SpeakerTreeComponent* SpeakerTreeItem::createItemComponent()
 {
-    std::cout << "create comp: " << speaker.id << std::endl;
     component = new SpeakerTreeComponent( *this );
     return component;
 }
@@ -222,7 +206,6 @@ void SpeakerTree::getConfiguration( std::vector<Speaker> & speakers )
     // loop over tree nodes to get speakers configurations
     for( int i = 0; i < root->getNumSubItems(); i++ ){
         SpeakerTreeItem * item = dynamic_cast <SpeakerTreeItem *> (root->getSubItem(i));
-        // SpeakerTreeComponent * component = dynamic_cast <SpeakerTreeComponent *> (item->component);
         speakers[i] = item->speaker;
     }
 }
@@ -233,9 +216,7 @@ void SpeakerTree::setConfiguration( std::vector<Speaker> & speakers )
     SpeakerTreeItemHolder * root = dynamic_cast <SpeakerTreeItemHolder *> (tree.getRootItem());
     
     // loop over speakers and add leaves to tree
-    std::cout << "--set config" << std::endl;
     for( int i = 0; i < speakers.size(); i++ ){
-        std::cout << "config spk: " << i <<  std::endl;
         root->addSpkItem( speakers[i] );
     }
 }
@@ -244,7 +225,6 @@ void SpeakerTree::addSpkItem()
 {
     SpeakerTreeItemHolder * root = dynamic_cast <SpeakerTreeItemHolder *> (tree.getRootItem());
     Speaker spk = { 0, Eigen::Vector3f (0,0,1) };
-    std::cout << "add spk" << std::endl;
     root->addSpkItem( spk );
 }
 
