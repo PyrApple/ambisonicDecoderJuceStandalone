@@ -15,10 +15,10 @@ struct Speaker
 };
 
 // get max speaker radius out of config
-inline float getMaxRadius(std::vector<Speaker> & _speakers){
+inline float getMaxRadius(std::vector<Speaker> & speakers){
     float r = 0.1;
-    for( int i = 0; i <= _speakers.size(); i++){
-        r = fmax(r, _speakers[i].aed[2]);
+    for( int i = 0; i < speakers.size(); i++){
+        r = fmax(r, speakers[i].aed[2]);
     }
     return r;
 }
@@ -29,9 +29,11 @@ inline unsigned int getNumAmbiCh( const unsigned int order )
     return pow(order + 1, 2);
 }
 
+// return max Ambisonic order for numSpk number of speakers, -1 for
 inline unsigned int getMaxAmbiOrder( const unsigned int numSpk )
 {
-    return round( sqrt( numSpk) - 1 );
+    int maxOrder = round( sqrt(numSpk) - 1 );
+    return fmax( maxOrder, 0);
 }
 
 // coordinate convention: X front, Y left, Z up.
