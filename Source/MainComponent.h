@@ -44,6 +44,8 @@ public:
     void buttonClicked( Button* button ) override;
     
     // local methods
+    void exportConfig();
+    void computeGains();
     void exportGains();
     void displaySpeakerConfigWindow();
     void loadConfigFromFile( File & file );
@@ -52,8 +54,10 @@ public:
     TextButton openConfigButton;
     TextButton exportConfigButton;
     TextButton openDisplayButton;
+    TextButton computeGainsButton;
     TextButton exportGainsButton;
     TextButton addSpkButton;
+    TextButton clearSpkButton;
     TextEditor logTextBox;
     Image logo3dtiImage;
     Image logoIclImage;

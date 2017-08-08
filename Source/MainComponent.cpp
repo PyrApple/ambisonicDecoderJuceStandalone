@@ -12,21 +12,19 @@ MainContentComponent::MainContentComponent()
         { &openConfigButton, "Open config file (.xml)" },
         { &exportConfigButton, "Export config file (.xml)" },
         { &openDisplayButton, "Display speakers config" },
+        { &computeGainsButton, "Compute gains" },
         { &exportGainsButton, "Export gains (.xml)" },
-        { &addSpkButton, "+" }
+        { &addSpkButton, "+" },
+        { &clearSpkButton, "clear all" }
     });
     for( auto& pair : buttonMap )
     {
         pair.first->setButtonText( pair.second );
         pair.first->addListener( this );
-        pair.first->setEnabled( true );
         pair.first->setColour( TextButton::buttonColourId, colourMain );
         pair.first->setColour( TextButton::textColourOffId, colourBkg );
         addAndMakeVisible( pair.first );
     }
-    // disable buttons awaiting config load
-    openDisplayButton.setEnabled( false );
-    exportGainsButton.setEnabled( false );
     
     // log text box
     addAndMakeVisible( logTextBox );
@@ -78,21 +76,25 @@ void MainContentComponent::resized()
     // buttons
     float margin = 20.f;
     float h = 40.f;
-    float w = ( getWidth() - 4*margin )/3.f;
+    float w = ( getWidth() - 6*margin )/5.f;
     openConfigButton.setBounds( margin, margin, w, h );
-    openDisplayButton.setBounds( openConfigButton.getX() + w + margin, margin,  w, h );
-    exportGainsButton.setBounds( openDisplayButton.getX() + w + margin, margin,  w, h );
+    exportConfigButton.setBounds( openConfigButton.getX() + w + margin, margin,  w, h );
+    openDisplayButton.setBounds( exportConfigButton.getX() + w + margin, margin,  w, h );
+    computeGainsButton.setBounds( openDisplayButton.getX() + w + margin, margin,  w, h );
+    exportGainsButton.setBounds( computeGainsButton.getX() + w + margin, margin,  w, h );
     
     // speaker tree
     float y = 2*margin + openConfigButton.getY() + openConfigButton.getHeight();
     addSpkButton.setBounds( getWidth() - margin, y, 20, 20 );
+    clearSpkButton.setBounds( getWidth() - margin, addSpkButton.getY() + 2*margin, 20, 20 );
     speakerTree.setBounds(margin, y, getWidth() - 2*margin, 100.0f);
     
     // log window
     y = 2*margin + speakerTree.getY() + speakerTree.getHeight();
     logTextBox.setBounds( margin, y, getWidth() - 2*margin, getHeight() - y - margin );
     
-    // debug
+    
+    // debug, TODELETE once speakerTree.getConfiguration integrated
     speakerTree.getConfiguration( speakers );
     for( int i = 0; i < speakers.size(); i++ ){
         for( int j = 0; j < 3; j++ ){
@@ -100,7 +102,6 @@ void MainContentComponent::resized()
         }
         std::cout << std::endl;
     }
-    
 }
 
 void MainContentComponent::buttonClicked( Button* button )
@@ -108,6 +109,10 @@ void MainContentComponent::buttonClicked( Button* button )
     // get / load file
     if( button == &openConfigButton )
     {
+        // clear current config
+        speakerTree.clear();
+        
+        // get / load file
         FileChooser chooser( "Select a configuration file", File::nonexistent, "*.xml" );
         if( chooser.browseForFileToOpen() )
         {
@@ -116,10 +121,25 @@ void MainContentComponent::buttonClicked( Button* button )
         }
     }
     
+    // export speaker config
+    else if( button == &exportConfigButton )
+    {
+        speakerTree.getConfiguration( speakers );
+        exportConfig();
+    }
+    
     // open display speakers window
     else if( button == &openDisplayButton )
     {
+        speakerTree.getConfiguration( speakers );
         displaySpeakerConfigWindow();
+    }
+    
+    // compute Ambisonic gains
+    else if( button == &computeGainsButton )
+    {
+        speakerTree.getConfiguration( speakers );
+        if( speakers.size() > 0 ){ computeGains(); }
     }
     
     // export Ambisonic gains to desktop
@@ -128,10 +148,16 @@ void MainContentComponent::buttonClicked( Button* button )
         exportGains();
     }
 
-    // export Ambisonic gains to desktop
+    // add speaker item to configuration
     else if( button == &addSpkButton )
     {
         speakerTree.addSpkItem();
+    }
+
+    // clear all speakers from configuration
+    else if( button == &clearSpkButton )
+    {
+        speakerTree.clear();
     }
 }
 
@@ -139,22 +165,16 @@ void MainContentComponent::buttonClicked( Button* button )
 void MainContentComponent::loadConfigFromFile( File & file )
 {
     // import content of xml file to speakers
-    bool importSucess = xmlIO.importConfig( file, speakers );
+    bool importSucess = xmlIO.readConfig( file, speakers );
     if( !importSucess ){ return; }
     
-    // skip remaining if no speaker found in config
-    if( speakers.size() == 0 ){
-        openDisplayButton.setEnabled( false );
-        return;
-    }
-    
-    // delete existing window when loading new config
-    if( displayWindow != nullptr ){ delete displayWindow; }
-    
-    // enable display / export buttons
-    openDisplayButton.setEnabled( true );
-    exportGainsButton.setEnabled( true );
-    
+    // update speaker tree GUI
+    speakerTree.setConfiguration( speakers );
+}
+
+// compute ambisonic gains for current speaker config
+void MainContentComponent::computeGains()
+{
     // format speaker pos to matrix to use in Ambi decode
     Eigen::MatrixXf spkAzimElev( 2, speakers.size() );
     for( int i = 0; i < speakers.size(); i++ ){
@@ -182,11 +202,17 @@ void MainContentComponent::loadConfigFromFile( File & file )
     std::stringstream buffer;
     buffer << ambiGains << std::endl;
     logTextBox.setText( String(buffer.str()) );
+    
+    // enable export button
+    exportGainsButton.setEnabled( true );
 }
 
 // open display speaker config window
 void MainContentComponent::displaySpeakerConfigWindow()
 {
+    // delete existing window when loading new config
+    if( displayWindow != nullptr ){ delete displayWindow; }
+    
     bool native = true; // use native title bar
     
     // create window
@@ -206,6 +232,16 @@ void MainContentComponent::displaySpeakerConfigWindow()
     displayWindow->setVisible( true );
 }
 
+// save speaker config to desktop
+void MainContentComponent::exportConfig()
+{
+    // get export file
+    const File file (File::getSpecialLocation (File::userDesktopDirectory).getNonexistentChildFile ("SpkeakerConfig", ".xml"));
+    
+    // save gains to xml file
+    xmlIO.writeConfig( file, speakers );
+}
+
 // save content of data to desktop in fileName, format: SpkID, x, y, z, gW, gX, gY, ...
 void MainContentComponent::exportGains()
 {
@@ -213,5 +249,5 @@ void MainContentComponent::exportGains()
     const File file (File::getSpecialLocation (File::userDesktopDirectory).getNonexistentChildFile ("AmbiGains", ".xml"));
     
     // save gains to xml file
-    xmlIO.saveConfig( file, speakers, ambiGains );
+    xmlIO.writeGains( file, speakers, ambiGains );
 }

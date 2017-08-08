@@ -10,35 +10,30 @@ class SpeakerTreeItemHolder;
 
 class SpeakerTreeComponent :
 public Component,
-public ComboBox::Listener,
-public Button::Listener
+public Button::Listener,
+public Label::Listener,
+public ComboBox::Listener
 {
     
 private:
     
-    Label coord1;
-    Label coord2;
-    Label coord3;
-    Label id;
+    Label id, coord1, coord2, coord3;
     ComboBox convention;
     TextButton rmSpk;
-    int itemId;
     SpeakerTreeItem & owner;
     
 public:
     
-    SpeakerTreeComponent( int _id, SpeakerTreeItem & _owner );
+    SpeakerTreeComponent( SpeakerTreeItem & _owner );
     void resized() override;
     void paint (Graphics& g) override;
     
-    // get coords from labels
-    Eigen::Vector3f getCoords();
-    
-    // set coords to labels
-    void setCoords( const Eigen::Vector3f & coords );
-    void getConfiguration( Speaker & spk );
     void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
+    void labelTextChanged (Label *labelThatHasChanged) override;
     void buttonClicked( Button* button ) override;
+    
+    void setCoords( const Eigen::Vector3f & coords );
+    Eigen::Vector3f getCoords();
     
 private:
     
@@ -47,16 +42,18 @@ private:
 };
 
 
-class SpeakerTreeItem: public TreeViewItem
+class SpeakerTreeItem :
+public TreeViewItem
 {
     
 public:
     
     SpeakerTreeItemHolder & owner;
     SpeakerTreeComponent * component;
-    int id;
+    Speaker speaker;
+    String convention;
     
-    SpeakerTreeItem( int _id, SpeakerTreeItemHolder & _owner );
+    SpeakerTreeItem( const Speaker & speaker, SpeakerTreeItemHolder & _owner );
     SpeakerTreeComponent* createItemComponent() override;
     bool mightContainSubItems() override;
     void removeSpkItem();
@@ -77,7 +74,7 @@ public:
     void paintItem(Graphics& g, int width, int height) override;
     bool mightContainSubItems() override;
     void removeSpkItem( int itemId );
-    void addSpkItem();
+    void addSpkItem( Speaker & speaker );
     
 private:
     
@@ -96,7 +93,9 @@ public:
     ~SpeakerTree();
     void resized() override;
     void getConfiguration( std::vector<Speaker> & speakers );
+    void setConfiguration( std::vector<Speaker> & speakers );
     void addSpkItem();
+    void clear();
     
 private:
     

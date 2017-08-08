@@ -14,7 +14,7 @@ public:
     ~XmlIO() {}
     
     // import xml config from file into speakers
-    bool importConfig( const File & file, std::vector<Speaker> & speakers )
+    bool readConfig( const File & file, std::vector<Speaker> & speakers )
     {
         // parse XML
         XmlDocument mainDocument( file );
@@ -93,9 +93,38 @@ public:
         
     }
     
-    void saveConfig( const File & file, const std::vector<Speaker> & speakers, const Eigen::MatrixXf ambiGains ){
+    void writeConfig( const File & file, const std::vector<Speaker> & speakers ){
         
         // create output string: loop over speakers
+        String data = "<speakerconfig>\n\n";
+        for( int i = 0; i < speakers.size(); i++ ){
+            
+            // add speaker id
+            data += "\t<speaker id='" + String( speakers[i].id ) + "' conv='aed'> ";
+            
+            // add speaker coordinates
+            Eigen::Vector3f p = rad2degVect( speakers[i].aed );
+            for( int j = 0; j < p.size(); j++ ){
+                data += String( rmNearZero( p[j], 10e-7) );
+                if( j < p.size() - 1){ data += ", "; }
+            }
+
+            // end line
+            data += " </speaker>\n";
+        }
+        data += "\n</speakerconfig>";
+        
+        // write to file
+        file.replaceWithText ( data );
+        
+        // notify user
+        AlertWindow::showMessageBoxAsync( AlertWindow::InfoIcon, "file export", ".xml file saved to desktop", "OK" );
+    }
+    
+    void writeGains( const File & file, const std::vector<Speaker> & speakers, const Eigen::MatrixXf ambiGains ){
+        
+        // create output string: loop over speakers
+        std::cout << getMaxAmbiOrder( ambiGains.cols() ) << std::endl;
         String data = "<speakergains order='" + String( getMaxAmbiOrder(ambiGains.cols()) ) + "'>\n";
         for( int i = 0; i < speakers.size(); i++ ){
             

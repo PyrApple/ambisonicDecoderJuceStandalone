@@ -1,45 +1,54 @@
 
 #include "SpeakerTree.h"
 
-SpeakerTreeComponent::SpeakerTreeComponent( int _id, SpeakerTreeItem & _owner ): owner(_owner)
+SpeakerTreeComponent::SpeakerTreeComponent( SpeakerTreeItem & _owner ): owner(_owner)
 {
-    itemId = _id;
     
-    coord1.setText("0.0", dontSendNotification);
     coord1.setEditable(true);
     coord1.setColour(Label::textColourId, colourMain);
     addAndMakeVisible(coord1);
+    coord1.addListener( this );
     
-    coord2.setText("0.0", dontSendNotification);
     coord2.setEditable(true);
     coord2.setColour(Label::textColourId, colourMain);
     addAndMakeVisible(coord2);
+    coord2.addListener( this );
     
-    coord3.setText("1.0", dontSendNotification);
     coord3.setEditable(true);
     coord3.setColour(Label::textColourId, colourMain);
     addAndMakeVisible(coord3);
+    coord3.addListener( this );
     
-    id.setText(String(_id + 1), dontSendNotification);
     id.setEditable(true);
     id.setColour(Label::textColourId, colourMain);
     addAndMakeVisible(id);
+    id.addListener( this );
     
-    convention.setEditableText (true);
+    convention.setEditableText( false );
     convention.setJustificationType (Justification::centred);
     convention.addItem("aed", 1);
     convention.addItem("xyz", 2);
-    convention.setSelectedId( 1, dontSendNotification );
     convention.setColour(ComboBox::outlineColourId, colourBkg);
     convention.setColour(ComboBox::backgroundColourId, colourBkg);
     convention.addListener( this );
     addAndMakeVisible( convention );
     
     rmSpk.setButtonText( "-" );
-    rmSpk.addListener( this );
     rmSpk.setColour( TextButton::buttonColourId, colourMain );
     rmSpk.setColour( TextButton::textColourOffId, colourBkg );
     addAndMakeVisible( rmSpk );
+    rmSpk.addListener( this );
+    
+    // update from owner values
+    id.setText(String(owner.speaker.id), dontSendNotification);
+    if( owner.convention == "aed" ){
+        convention.setSelectedId( 1, dontSendNotification );
+        setCoords( rad2degVect( owner.speaker.aed ) );
+    }
+    else{
+        convention.setSelectedId( 2, dontSendNotification );
+        setCoords( sphericalToCartesian( owner.speaker.aed ) );
+    }
 }
 
 void SpeakerTreeComponent::resized()
@@ -66,7 +75,15 @@ void SpeakerTreeComponent::paint (Graphics& g)
     g.drawText("speaker", 0, 0, 60, 20, Justification::left);
 }
 
-// get coords from labels
+// set coords to labels
+void SpeakerTreeComponent::setCoords( const Eigen::Vector3f & coords )
+{
+    coord1.setText( String( rmNearZero(coords[0], 10e-8) ), dontSendNotification );
+    coord2.setText( String( coords[1] ), dontSendNotification );
+    coord3.setText( String( coords[2] ), dontSendNotification );
+}
+
+// get coords from label
 Eigen::Vector3f SpeakerTreeComponent::getCoords()
 {
     Eigen::Vector3f coords;
@@ -76,61 +93,71 @@ Eigen::Vector3f SpeakerTreeComponent::getCoords()
     return coords;
 }
 
-// set coords to labels
-void SpeakerTreeComponent::setCoords( const Eigen::Vector3f & coords )
-{
-    coord1.setText( String( rmNearZero(coords[0], 10e-8) ), dontSendNotification );
-    coord2.setText( String( coords[1] ), dontSendNotification );
-    coord3.setText( String( coords[2] ), dontSendNotification );
-}
-
-void SpeakerTreeComponent::getConfiguration( Speaker & spk )
-{
-    // get coords
-    Eigen::Vector3f coords = getCoords();
-    
-    // convert xyz to aed
-    if( convention.getText() == "xyz" ){
-        spk.aed = cartesianToSpherical(coords);
-    }
-    else{
-        spk.aed = deg2radVect( coords );
-    }
-}
-
-void SpeakerTreeComponent::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
-{
-    if( comboBoxThatHasChanged == &convention ){
-        
-        // get coords
-        Eigen::Vector3f coords = getCoords();
-        
-        // change coord system
-        if( comboBoxThatHasChanged->getText() == "xyz" ){
-            coords = sphericalToCartesian( deg2radVect( coords ));
-            setCoords( coords );
-        }
-        else{
-            coords = cartesianToSpherical( coords );
-            setCoords( rad2degVect( coords ) );
-        }
-    }
-}
+//void SpeakerTreeComponent::getConfiguration( Speaker & spk )
+//{
+//    // get id
+//    spk.id = itemId;
+//
+//    // get coords
+//    Eigen::Vector3f coords = getCoords();
+//
+//    // convert xyz to aed
+//    if( convention.getText() == "xyz" ){
+//        spk.aed = cartesianToSpherical(coords);
+//    }
+//    else{
+//        spk.aed = deg2radVect( coords );
+//    }
+//}
 
 void SpeakerTreeComponent::buttonClicked( Button* button )
 {
     owner.removeSpkItem();
 }
 
-
-SpeakerTreeItem::SpeakerTreeItem( int _id, SpeakerTreeItemHolder & _owner ): owner(_owner)
+void SpeakerTreeComponent::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
 {
-    id = _id;
+    // get coords
+    Eigen::Vector3f coords = getCoords();
+
+    // update locals: change coord system
+    if( comboBoxThatHasChanged->getText() == "xyz" ){
+        coords = sphericalToCartesian( deg2radVect( coords ));
+        setCoords( coords );
+    }
+    else{
+        coords = cartesianToSpherical( coords );
+        setCoords( rad2degVect( coords ) );
+    }
+    
+    // update owner
+    owner.convention = comboBoxThatHasChanged->getText();
+}
+
+
+void SpeakerTreeComponent::labelTextChanged (Label *labelThatHasChanged)
+{
+    // update owner id
+    owner.speaker.id = id.getText().getIntValue();
+    
+    // update owner coord
+    Eigen::Vector3f coords = getCoords();
+    if( convention.getText() == "xyz" ){ coords = cartesianToSpherical(coords); }
+    else{ coords = deg2radVect( coords ); }
+    owner.speaker.aed = coords;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+SpeakerTreeItem::SpeakerTreeItem( const Speaker & _speaker, SpeakerTreeItemHolder & _owner ): owner(_owner)
+{
+    speaker = _speaker;
 }
 
 SpeakerTreeComponent* SpeakerTreeItem::createItemComponent()
 {
-    component = new SpeakerTreeComponent( id, *this );
+    std::cout << "create comp: " << speaker.id << std::endl;
+    component = new SpeakerTreeComponent( *this );
     return component;
 }
 
@@ -144,6 +171,7 @@ void SpeakerTreeItem::removeSpkItem()
     owner.removeSpkItem( getRowNumberInTree() );
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 SpeakerTreeItemHolder::SpeakerTreeItemHolder()
 {
@@ -163,11 +191,13 @@ void SpeakerTreeItemHolder::removeSpkItem( int itemId )
     removeSubItem( itemId );
 }
 
-void SpeakerTreeItemHolder::addSpkItem()
+void SpeakerTreeItemHolder::addSpkItem( Speaker & speaker )
 {
-    addSubItem( new SpeakerTreeItem( getNumSubItems(), *this ) );
+    speaker.id = getNumSubItems();
+    addSubItem( new SpeakerTreeItem( speaker, *this ) );
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 SpeakerTree::SpeakerTree()
 {
@@ -192,13 +222,35 @@ void SpeakerTree::getConfiguration( std::vector<Speaker> & speakers )
     // loop over tree nodes to get speakers configurations
     for( int i = 0; i < root->getNumSubItems(); i++ ){
         SpeakerTreeItem * item = dynamic_cast <SpeakerTreeItem *> (root->getSubItem(i));
-        SpeakerTreeComponent * component = dynamic_cast <SpeakerTreeComponent *> (item->component);
-        component->getConfiguration( speakers[i] );
+        // SpeakerTreeComponent * component = dynamic_cast <SpeakerTreeComponent *> (item->component);
+        speakers[i] = item->speaker;
+    }
+}
+
+void SpeakerTree::setConfiguration( std::vector<Speaker> & speakers )
+{
+    // get tree root
+    SpeakerTreeItemHolder * root = dynamic_cast <SpeakerTreeItemHolder *> (tree.getRootItem());
+    
+    // loop over speakers and add leaves to tree
+    std::cout << "--set config" << std::endl;
+    for( int i = 0; i < speakers.size(); i++ ){
+        std::cout << "config spk: " << i <<  std::endl;
+        root->addSpkItem( speakers[i] );
     }
 }
 
 void SpeakerTree::addSpkItem()
 {
     SpeakerTreeItemHolder * root = dynamic_cast <SpeakerTreeItemHolder *> (tree.getRootItem());
-    root->addSpkItem();
+    Speaker spk = { 0, Eigen::Vector3f (0,0,1) };
+    std::cout << "add spk" << std::endl;
+    root->addSpkItem( spk );
 }
+
+void SpeakerTree::clear()
+{
+    SpeakerTreeItemHolder * root = dynamic_cast <SpeakerTreeItemHolder *> (tree.getRootItem());
+    root->clearSubItems();
+}
+
