@@ -60,7 +60,7 @@ inline Eigen::Vector3f sphericalToCartesian(const Eigen::Vector3f& p)
     return Eigen::Vector3f (x, y, z);
 }
 
-inline void rmNearZero( Eigen::MatrixXf& m, float threshold)
+inline void rmNearZero( Eigen::MatrixXf& m, float threshold = 10e-5)
 {
     for( int i = 0; i < m.rows(); i++){
         for( int j = 0; j < m.cols(); j++){
@@ -69,7 +69,7 @@ inline void rmNearZero( Eigen::MatrixXf& m, float threshold)
     }
 }
 
-inline float rmNearZero( float val, float threshold)
+inline float rmNearZero( float val, float threshold = 10e-5)
 {
     if( std::abs( val ) < threshold ){ return 0; }
     else{ return val; }

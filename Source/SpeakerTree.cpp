@@ -78,9 +78,9 @@ void SpeakerTreeComponent::paint (Graphics& g)
 // set coords to labels
 void SpeakerTreeComponent::setCoords( const Eigen::Vector3f & coords )
 {
-    coord1.setText( String( rmNearZero(coords[0], 10e-8) ), dontSendNotification );
-    coord2.setText( String( coords[1] ), dontSendNotification );
-    coord3.setText( String( coords[2] ), dontSendNotification );
+    coord1.setText( String( rmNearZero(coords[0]) ), dontSendNotification );
+    coord2.setText( String( rmNearZero(coords[1]) ), dontSendNotification );
+    coord3.setText( String( rmNearZero(coords[2]) ), dontSendNotification );
 }
 
 // get coords from label

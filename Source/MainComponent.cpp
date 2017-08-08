@@ -188,7 +188,7 @@ void MainContentComponent::computeGains()
     // get decoding matrix
     bool useEpad = true;
     ambiGains = ambisonicDecoder.getDecodingMatrix( spkAzimElev, order, useEpad );
-    rmNearZero( ambiGains, 10e-7 );
+    rmNearZero( ambiGains );
     
     // apply distance gain compensation
     for( int i = 0; i < speakers.size(); i++ ){

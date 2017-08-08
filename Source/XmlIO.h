@@ -105,7 +105,7 @@ public:
             // add speaker coordinates
             Eigen::Vector3f p = rad2degVect( speakers[i].aed );
             for( int j = 0; j < p.size(); j++ ){
-                data += String( rmNearZero( p[j], 10e-7) );
+                data += String( rmNearZero( p[j] ) );
                 if( j < p.size() - 1){ data += ", "; }
             }
 
@@ -134,9 +134,8 @@ public:
             // add speaker pos (cartesian)
             data += "\t\t<pos conv='xyz'> ";
             Eigen::Vector3f p = sphericalToCartesian(speakers[i].aed);
-            for( int j = 0; j < p.size(); j++ ){ if( std::abs(p[j]) < 10e-7 ){ p[j] = 0; } } // round
             for( int j = 0; j < p.size(); j++ ){
-                data += String(p[j]);
+                data += String( rmNearZero( p[j] ) );
                 if( j < p.size() - 1){ data += ", "; }
             }
             data += " </pos>\n";
