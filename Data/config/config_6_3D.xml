@@ -2,11 +2,11 @@
 <?xml version="1.0"?>
 <speakerconfig>
 
-  <speaker id="10" conv="xyz"> 1, 0, 0 </speaker>
-  <speaker id="11" conv="xyz"> -1, 0, 0 </speaker>
-  <speaker id="12" conv="xyz"> 0, 1, 0 </speaker>
-  <speaker id="13" conv="xyz"> 0, -1, 0 </speaker>
-  <speaker id="224" conv="xyz"> 0, 0, 1 </speaker>
-  <speaker id="53" conv="xyz"> 0, 0, -1 </speaker>
+  <speaker id="0" conv="xyz"> 1, 0, 0 </speaker>
+  <speaker id="1" conv="xyz"> -1, 0, 0 </speaker>
+  <speaker id="2" conv="xyz"> 0, 1, 0 </speaker>
+  <speaker id="3" conv="xyz"> 0, -1, 0 </speaker>
+  <speaker id="4" conv="xyz"> 0, 0, 1 </speaker>
+  <speaker id="5" conv="xyz"> 0, 0, -1 </speaker>
 
 </speakerconfig>
