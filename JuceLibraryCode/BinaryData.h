@@ -9,13 +9,13 @@
 namespace BinaryData
 {
     extern const char*   _3dti_logo_png;
-    const int            _3dti_logo_pngSize = 2147;
+    const int            _3dti_logo_pngSize = 13508;
 
     extern const char*   ambisonicLogo_png;
     const int            ambisonicLogo_pngSize = 8345;
 
     extern const char*   icl_logo_png;
-    const int            icl_logo_pngSize = 11907;
+    const int            icl_logo_pngSize = 16556;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];
