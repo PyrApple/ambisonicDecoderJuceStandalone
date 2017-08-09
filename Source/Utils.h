@@ -34,7 +34,7 @@ inline unsigned int getNumAmbiCh( const unsigned int order )
 // return max Ambisonic order for numSpk number of speakers, -1 for
 inline unsigned int getMaxAmbiOrder( const unsigned int numSpk )
 {
-    int maxOrder = round( sqrt(numSpk) - 1 );
+    int maxOrder = floor( sqrt(numSpk) - 1 );
     return fmax( maxOrder, 0);
 }
 
