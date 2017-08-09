@@ -63,7 +63,7 @@ void SpeakerTreeComponent::resized()
     coord2.setBounds(offset, 0, w, h);
     offset += w + margin;
     coord3.setBounds(offset, 0, w, h);
-    rmSpk.setBounds(getWidth()-20-margin, 0, 20, 20);
+    rmSpk.setBounds(getWidth()-20-margin, 0, 20, 17);
 }
 
 void SpeakerTreeComponent::paint (Graphics& g)

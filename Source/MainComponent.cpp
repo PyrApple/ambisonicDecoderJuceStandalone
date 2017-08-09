@@ -59,7 +59,7 @@ void MainContentComponent::paint( Graphics& g )
     // Our component is opaque, so we must completely fill the background with a solid colour
     g.fillAll( colourBkg );
     g.setColour( colourMain );
-    g.drawText( "Ambisonic decode gains:", margin, logTextBox.getY()-15.f, getWidth() - 2*margin, 10, Justification::left );
+    g.drawText( "Ambisonic decode gains", margin, logTextBox.getY()-15.f, getWidth() - 2*margin, 10, Justification::left );
     
     // images (logos) and credits
     g.setFont(10);
@@ -67,10 +67,10 @@ void MainContentComponent::paint( Graphics& g )
     
     // skip logos if not enought width
     if( getWidth() < logoIclImage.getWidth()*3 ){ return; }
-    float quarter = (getWidth()-2*margin)/4;
     float y = speakerTree.getY() - margin;
-    g.drawImageAt( logoIclImage, getWidth() - margin - quarter - logoIclImage.getWidth()/2, y - logoIclImage.getHeight()/2);
-    g.drawImageAt( logo3dtiImage, margin + quarter - logo3dtiImage.getWidth()/2, y - logo3dtiImage.getHeight()/2);
+    float x = getWidth() - margin - logoIclImage.getWidth();
+    g.drawImageAt( logoIclImage, x, y - logoIclImage.getHeight()/2);
+    g.drawImageAt( logo3dtiImage, x - margin - logo3dtiImage.getWidth(), y - logo3dtiImage.getHeight()/2);
 }
 
 void MainContentComponent::resized()
@@ -87,12 +87,13 @@ void MainContentComponent::resized()
     
     // speaker tree
     float y = 2*margin + openConfigButton.getY() + openConfigButton.getHeight();
-    speakerTree.setBounds(2*margin, y, getWidth() - 3*margin, 100.0f);
+    float yRemain = getHeight() - y - 3*margin;
+    speakerTree.setBounds(2*margin, y, getWidth() - 3*margin, 0.5*yRemain);
     addSpkButton.setBounds( margin, y, 20, 20 );
     
     // log window
     y = 2*margin + speakerTree.getY() + speakerTree.getHeight();
-    logTextBox.setBounds( margin, y, getWidth() - 2*margin, getHeight() - y - margin );
+    logTextBox.setBounds( margin, y, getWidth() - 2*margin, 0.5*yRemain );
     clearSpkButton.setBounds( getWidth() - margin - 40, y - 1.5*margin, 40, 20 );
 }
 
@@ -132,6 +133,7 @@ void MainContentComponent::buttonClicked( Button* button )
     {
         speakerTree.getConfiguration( speakers );
         if( speakers.size() > 0 ){ computeGains(); }
+        else{ logTextBox.setText(""); }
     }
     
     // export Ambisonic gains to desktop
