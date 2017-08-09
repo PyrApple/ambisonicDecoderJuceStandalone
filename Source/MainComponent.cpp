@@ -11,11 +11,11 @@ MainContentComponent::MainContentComponent()
     buttonMap.insert({
         { &openConfigButton, "Open config file (.xml)" },
         { &exportConfigButton, "Export config file (.xml)" },
-        { &openDisplayButton, "Display speakers config" },
-        { &computeGainsButton, "Compute gains" },
-        { &exportGainsButton, "Export gains (.xml)" },
+        { &openDisplayButton, "Display \nspeakers" },
+        { &computeGainsButton, "Compute \ngains" },
+        { &exportGainsButton, "Export gains file (.xml)" },
         { &addSpkButton, "+" },
-        { &clearSpkButton, "clear all" }
+        { &clearSpkButton, "clear" }
     });
     for( auto& pair : buttonMap )
     {
@@ -54,21 +54,23 @@ MainContentComponent::~MainContentComponent()
 
 void MainContentComponent::paint( Graphics& g )
 {
+    float margin = 20.f;
+    
     // Our component is opaque, so we must completely fill the background with a solid colour
     g.fillAll( colourBkg );
     g.setColour( colourMain );
-    g.drawText( "Ambisonic decode gains:", 20.f, 85.f, getWidth() - 2*20.f, 10, Justification::left );
+    g.drawText( "Ambisonic decode gains:", margin, logTextBox.getY()-15.f, getWidth() - 2*margin, 10, Justification::left );
     
     // images (logos) and credits
-    float margin = 10.f;
     g.setFont(10);
-    g.drawText("Designed by D. Poirier-Quinot, Dyson School of Design and Engineering, Imperial College, 2017", 20.f, getHeight()-15.f, getWidth()-margin-20.f, 5, Justification::left);
+    g.drawText("Designed by D. Poirier-Quinot, Dyson School of Design and Engineering, Imperial College, 2017", margin, getHeight()-15.f, getWidth()-2*margin, 5, Justification::right);
     
     // skip logos if not enought width
     if( getWidth() < logoIclImage.getWidth()*3 ){ return; }
-    
-    g.drawImageAt( logoIclImage, getWidth()-logoIclImage.getWidth() - 2.5*margin, 40 + 2.7*margin );
-    g.drawImageAt( logo3dtiImage, getWidth() - logo3dtiImage.getWidth() - logoIclImage.getWidth() - 5*margin, 40 + 2.7*margin );
+    float quarter = (getWidth()-2*margin)/4;
+    float y = speakerTree.getY() - margin;
+    g.drawImageAt( logoIclImage, getWidth() - margin - quarter - logoIclImage.getWidth()/2, y - logoIclImage.getHeight()/2);
+    g.drawImageAt( logo3dtiImage, margin + quarter - logo3dtiImage.getWidth()/2, y - logo3dtiImage.getHeight()/2);
 }
 
 void MainContentComponent::resized()
@@ -85,13 +87,13 @@ void MainContentComponent::resized()
     
     // speaker tree
     float y = 2*margin + openConfigButton.getY() + openConfigButton.getHeight();
-    addSpkButton.setBounds( getWidth() - margin, y, 20, 20 );
-    clearSpkButton.setBounds( getWidth() - margin, addSpkButton.getY() + 2*margin, 20, 20 );
-    speakerTree.setBounds(margin, y, getWidth() - 2*margin, 100.0f);
+    speakerTree.setBounds(2*margin, y, getWidth() - 3*margin, 100.0f);
+    addSpkButton.setBounds( margin, y, 20, 20 );
     
     // log window
     y = 2*margin + speakerTree.getY() + speakerTree.getHeight();
     logTextBox.setBounds( margin, y, getWidth() - 2*margin, getHeight() - y - margin );
+    clearSpkButton.setBounds( getWidth() - margin - 40, y - 1.5*margin, 40, 20 );
 }
 
 void MainContentComponent::buttonClicked( Button* button )
