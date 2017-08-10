@@ -24,7 +24,8 @@
 
 class MainContentComponent:
 public Component,
-public Button::Listener
+public Button::Listener,
+public Timer
 {
     friend class Display;
     
@@ -39,6 +40,7 @@ public:
     
     // override virtual methods Button::Listener
     void buttonClicked( Button* button ) override;
+    void timerCallback() override;
     
     // local methods
     void exportConfig();
@@ -46,6 +48,7 @@ public:
     void exportGains();
     void displaySpeakerConfigWindow();
     void loadConfigFromFile( File & file );
+    void updateAmbiOrderComboBox();
     
     // GUI components
     TextButton openConfigButton;
@@ -58,6 +61,8 @@ public:
     TextEditor logTextBox;
     Image logo3dtiImage;
     Image logoIclImage;
+    ComboBox ambiOrderComboBox;
+    Label ambiOrderLabel;
     SpeakerTree speakerTree;
     
     // misc.

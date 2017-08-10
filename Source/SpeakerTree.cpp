@@ -176,7 +176,7 @@ void SpeakerTreeItemHolder::removeSpkItem( int itemId )
 SpeakerTree::SpeakerTree()
 {
     addAndMakeVisible(tree);
-    tree.setRootItem(new SpeakerTreeItemHolder());
+    tree.setRootItem( new SpeakerTreeItemHolder() );
     tree.setRootItemVisible(false);
 }
 

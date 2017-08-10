@@ -36,6 +36,22 @@ MainContentComponent::MainContentComponent()
     logTextBox.setColour( TextEditor::backgroundColourId, Colours::transparentBlack );
     logTextBox.setColour( TextEditor::outlineColourId, colourMain );
     
+    // ambisonic order combo box
+    ambiOrderComboBox.setEditableText( false );
+    ambiOrderComboBox.setJustificationType (Justification::centred);
+    ambiOrderComboBox.addItem("0", 1);
+    ambiOrderComboBox.setSelectedId( 1, dontSendNotification );
+    ambiOrderComboBox.setColour(ComboBox::outlineColourId, colourBkg);
+    ambiOrderComboBox.setColour(ComboBox::backgroundColourId, colourBkg);
+    addAndMakeVisible( ambiOrderComboBox );
+    
+    // ambisonic order label
+    ambiOrderLabel.setColour( TextButton::textColourOffId, colourBkg );
+    ambiOrderLabel.setText("ambi order", dontSendNotification);
+    ambiOrderLabel.setEditable( false );
+    ambiOrderLabel.setJustificationType(Justification::right);
+    addAndMakeVisible( ambiOrderLabel );
+    
     // speaker tree
     addAndMakeVisible( speakerTree );
     
@@ -45,6 +61,9 @@ MainContentComponent::MainContentComponent()
     float sFact = .4f;
     logo3dtiImage = logo3dtiImage.rescaled( sFact*logo3dtiImage.getWidth(), sFact*logo3dtiImage.getHeight(), Graphics::mediumResamplingQuality );
     logoIclImage = logoIclImage.rescaled( sFact*logoIclImage.getWidth(), sFact*logoIclImage.getHeight(), Graphics::mediumResamplingQuality);
+    
+    // start timer (updating available ambisonic order values)
+    startTimer(3000);
 }
 
 MainContentComponent::~MainContentComponent()
@@ -59,7 +78,7 @@ void MainContentComponent::paint( Graphics& g )
     // Our component is opaque, so we must completely fill the background with a solid colour
     g.fillAll( colourBkg );
     g.setColour( colourMain );
-    g.drawText( "Ambisonic decode gains", margin, logTextBox.getY()-15.f, getWidth() - 2*margin, 10, Justification::left );
+    g.drawText( "Ambisonic decode gains", margin, logTextBox.getY()-15.f, 140, 10, Justification::left );
     
     // images (logos) and credits
     g.setFont(10);
@@ -94,7 +113,11 @@ void MainContentComponent::resized()
     // log window
     y = 2*margin + speakerTree.getY() + speakerTree.getHeight();
     logTextBox.setBounds( margin, y, getWidth() - 2*margin, 0.5*yRemain );
+    
+    // above log window gui elements
     clearSpkButton.setBounds( getWidth() - margin - 40, y - 1.5*margin, 40, 20 );
+    ambiOrderComboBox.setBounds( clearSpkButton.getX() - margin - 60, y - 1.5*margin, 60, 20);
+    ambiOrderLabel.setBounds( ambiOrderComboBox.getX() - margin - 100, y - 1.5*margin, 100, 20);
 }
 
 void MainContentComponent::buttonClicked( Button* button )
@@ -146,12 +169,16 @@ void MainContentComponent::buttonClicked( Button* button )
     else if( button == &addSpkButton )
     {
         speakerTree.addSpkItem();
+        speakerTree.getConfiguration( speakers );
+        updateAmbiOrderComboBox();
     }
 
     // clear all speakers from configuration
     else if( button == &clearSpkButton )
     {
         speakerTree.clear();
+        speakerTree.getConfiguration( speakers );
+        updateAmbiOrderComboBox();
     }
 }
 
@@ -164,6 +191,34 @@ void MainContentComponent::loadConfigFromFile( File & file )
     
     // update speaker tree GUI
     speakerTree.setConfiguration( speakers );
+    
+    // update available ambi orders
+    updateAmbiOrderComboBox();
+}
+
+void MainContentComponent::updateAmbiOrderComboBox()
+{
+    // get max ambisonic order
+    int order = getMaxAmbiOrder( speakers.size() );
+    
+    // need to change available ambisonic orders
+    if( ambiOrderComboBox.getNumItems() != order + 1 ){
+        ambiOrderComboBox.clear();
+        for( int i = 0; i < order+1; i ++ ){
+            ambiOrderComboBox.addItem(String(i), i+1);
+        }
+        // set highest order as selected item
+        ambiOrderComboBox.setSelectedId( order + 1, dontSendNotification );
+    }
+}
+
+// timer based check of current speaker configuration to update available ambisonic order combobox
+// had to use this mechanism to "listen" to speaker removals from speaker tree based on local button
+// (it was that or burderning the code with addListener(owner.owner.owner...) like call).
+void MainContentComponent::timerCallback()
+{
+    speakerTree.getConfiguration( speakers );
+    updateAmbiOrderComboBox();
 }
 
 // compute ambisonic gains for current speaker config
@@ -177,7 +232,13 @@ void MainContentComponent::computeGains()
     }
     
     // get max ambisonic order
-    int order = getMaxAmbiOrder( speakers.size() );
+    int maxOrder = getMaxAmbiOrder( speakers.size() );
+    
+    // get desired ambisonic order
+    int order = ambiOrderComboBox.getSelectedId() - 1;
+    
+    // security to make sure desired order is not above max (should not arise, not be available in combo box)
+    order = fmin( maxOrder, order );
     
     // get decoding matrix
     bool useEpad = true;
