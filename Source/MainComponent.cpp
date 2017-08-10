@@ -43,11 +43,12 @@ MainContentComponent::MainContentComponent()
     ambiOrderComboBox.setSelectedId( 1, dontSendNotification );
     ambiOrderComboBox.setColour(ComboBox::outlineColourId, colourBkg);
     ambiOrderComboBox.setColour(ComboBox::backgroundColourId, colourBkg);
+    ambiOrderComboBox.setColour(ComboBox::textColourId, colourMain);
     addAndMakeVisible( ambiOrderComboBox );
     
     // ambisonic order label
-    ambiOrderLabel.setColour( TextButton::textColourOffId, colourBkg );
-    ambiOrderLabel.setText("ambi order", dontSendNotification);
+    ambiOrderLabel.setColour( Label::textColourId, colourMain );
+    ambiOrderLabel.setText("Ambisonic order:", dontSendNotification);
     ambiOrderLabel.setEditable( false );
     ambiOrderLabel.setJustificationType(Justification::right);
     addAndMakeVisible( ambiOrderLabel );
@@ -117,7 +118,7 @@ void MainContentComponent::resized()
     // above log window gui elements
     clearSpkButton.setBounds( getWidth() - margin - 40, y - 1.5*margin, 40, 20 );
     ambiOrderComboBox.setBounds( clearSpkButton.getX() - margin - 60, y - 1.5*margin, 60, 20);
-    ambiOrderLabel.setBounds( ambiOrderComboBox.getX() - margin - 100, y - 1.5*margin, 100, 20);
+    ambiOrderLabel.setBounds( ambiOrderComboBox.getX() - margin - 120, y - 1.5*margin, 120, 20);
 }
 
 void MainContentComponent::buttonClicked( Button* button )

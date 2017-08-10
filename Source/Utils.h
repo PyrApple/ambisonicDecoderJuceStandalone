@@ -7,7 +7,7 @@
 
 // define colours
 const Colour colourBkg(PixelARGB(250, 40, 40, 40));
-const Colour colourMain(PixelARGB(250, 200, 200, 200));
+const Colour colourMain(PixelARGB(250, 220, 220, 220));
 
 // speaker structure
 struct Speaker
