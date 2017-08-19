@@ -1,10 +1,10 @@
 # JUCE (C++) Ambisonic Decoder Gains Exporter
 
-Export Ambisonic gains for irregular speaker configurations standalone. Based on the EPAD scheme [1]
+Export Ambisonic gains for irregular speaker configurations standalone. Based on the EPAD scheme [1].
 
 ## How to use
 
-Define speaker configuration in a xml file, coordinates system is either Cartesian ``xyz`` (in meters) or Spherical ``aed`` (azimuth, elevation, in degrees, distance in meters):
+Define speaker configuration in a xml file or directly from the GUI. For xml based configuration: coordinates system is either Cartesian ``xyz`` (in meters) or Spherical ``aed`` (azimuth, elevation, in degrees, distance in meters):
 
 ```xml
 <speakerconfig>
@@ -30,7 +30,9 @@ Upon import of this xml file in the exporter, EPAD Ambisonic channels gains will
 </speakergains>
 ```
 
-A compensation factor is added to these gains, to compensate for speaker distance from the origin, following the inverse square law.
+## Warning
+
+Developed as part of the 3DTI toolkit, it followed some exotic requirements. This exporter allows an export of order 2 gains regardless of the speakers configuration. Furthermore, a compensation factor is added to these gains, to compensate for speaker distance from the origin, following the inverse square law. Use to your own risks (or fork and modify).
 
 ## Convention
 * Channel ordering: ACN
