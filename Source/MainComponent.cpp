@@ -200,16 +200,19 @@ void MainContentComponent::loadConfigFromFile( File & file )
 void MainContentComponent::updateAmbiOrderComboBox()
 {
     // get max ambisonic order
-    int order = getMaxAmbiOrder( speakers.size() );
+    unsigned int recommendedOrder = getMaxAmbiOrder( speakers.size() );
+    
+    // force at least order 2 (3DTI toolkit engine requirement)
+    unsigned int minOrder = fmax(2, recommendedOrder);
     
     // need to change available ambisonic orders
-    if( ambiOrderComboBox.getNumItems() != order + 1 ){
+    if( ambiOrderComboBox.getNumItems() != minOrder + 1 ){
         ambiOrderComboBox.clear();
-        for( int i = 0; i < order+1; i ++ ){
+        for( int i = 0; i < minOrder+1; i ++ ){
             ambiOrderComboBox.addItem(String(i), i+1);
         }
         // set highest order as selected item
-        ambiOrderComboBox.setSelectedId( order + 1, dontSendNotification );
+        ambiOrderComboBox.setSelectedId( recommendedOrder + 1, dontSendNotification );
     }
 }
 
@@ -232,14 +235,14 @@ void MainContentComponent::computeGains()
         spkAzimElev(1,i) = rad2deg( speakers[i].aed[1] );
     }
     
-    // get max ambisonic order
-    int maxOrder = getMaxAmbiOrder( speakers.size() );
-    
     // get desired ambisonic order
     int order = ambiOrderComboBox.getSelectedId() - 1;
     
-    // security to make sure desired order is not above max (should not arise, not be available in combo box)
-    order = fmin( maxOrder, order );
+    // // security to make sure desired order is not above max (should not arise, not be available in combo box)
+    // // removed to allow for order 2 selection regardless of the speaker configuration: main 3DTI toolkit engine
+    // // requirement
+    // int maxOrder = getMaxAmbiOrder( speakers.size() );
+    // order = fmin( maxOrder, order );
     
     // get decoding matrix
     bool useEpad = true;
