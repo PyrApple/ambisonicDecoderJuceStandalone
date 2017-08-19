@@ -2,8 +2,8 @@
 
 <JUCERPROJECT id="an2O9P" name="AmbiDecodeGainsExporter" displaySplashScreen="1"
               reportAppUsage="1" splashScreenColour="Dark" projectType="guiapp"
-              version="0.3" bundleIdentifier="com.yourcompany.NewProject" includeBinaryInAppConfig="1"
-              jucerVersion="5.0.2">
+              version="0.3.1" bundleIdentifier="com.yourcompany.NewProject"
+              includeBinaryInAppConfig="1" jucerVersion="5.0.2">
   <MAINGROUP id="ZqsaGM" name="AmbiDecodeGainsExporter">
     <GROUP id="{F71C6848-3F20-E8A5-C3EC-0AF138ABB8E0}" name="Images">
       <FILE id="jxz6Jj" name="3dti_logo.png" compile="0" resource="1" file="Data/img/3dti_logo.png"/>
