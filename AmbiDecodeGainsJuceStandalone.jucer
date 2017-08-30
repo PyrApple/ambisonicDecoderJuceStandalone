@@ -26,7 +26,8 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="" smallIcon="Oyvumj">
+    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="" smallIcon=""
+               bigIcon="Oyvumj">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="AmbiDecodeGainsExporter_DEBUG"
                        headerPath="/usr/local/include" libraryPath="/usr/local/lib"
