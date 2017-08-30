@@ -205,14 +205,17 @@ void MainContentComponent::updateAmbiOrderComboBox()
     // force at least order 2 (3DTI toolkit engine requirement)
     unsigned int minOrder = fmax(2, recommendedOrder);
     
-    // need to change available ambisonic orders
+    // is there need to change available ambisonic orders?
     if( ambiOrderComboBox.getNumItems() != minOrder + 1 ){
         ambiOrderComboBox.clear();
         for( int i = 0; i < minOrder+1; i ++ ){
             ambiOrderComboBox.addItem(String(i), i+1);
         }
-        // set highest order as selected item
-        ambiOrderComboBox.setSelectedId( recommendedOrder + 1, dontSendNotification );
+        // // set highest order as selected item
+        // ambiOrderComboBox.setSelectedId( recommendedOrder + 1, dontSendNotification );
+        
+        // set order 2 as default selected item
+        ambiOrderComboBox.setSelectedId( 2 + 1, dontSendNotification );
     }
 }
 
