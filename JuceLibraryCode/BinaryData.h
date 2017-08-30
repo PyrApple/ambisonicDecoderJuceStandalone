@@ -12,7 +12,7 @@ namespace BinaryData
     const int            _3dti_logo_pngSize = 13508;
 
     extern const char*   ambisonicLogo_png;
-    const int            ambisonicLogo_pngSize = 88492;
+    const int            ambisonicLogo_pngSize = 95358;
 
     extern const char*   icl_logo_png;
     const int            icl_logo_pngSize = 16556;
