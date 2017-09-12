@@ -297,19 +297,33 @@ void MainContentComponent::displaySpeakerConfigWindow()
 // save speaker config to desktop
 void MainContentComponent::exportConfig()
 {
-    // get export file
-    const File file (File::getSpecialLocation (File::userDesktopDirectory).getNonexistentChildFile ("SpkeakerConfig", ".xml"));
+    // pop up file selection window
+    FileChooser fileChooser ("Save speaker config (.xml)", File(), "*.xml");
     
-    // save gains to xml file
-    xmlIO.writeConfig( file, speakers );
+    bool warnOverwrite = true;
+    if( fileChooser.browseForFileToSave( warnOverwrite ) )
+    {
+        // get file
+        File file( fileChooser.getResult() );
+        
+        // save gains to xml file
+        xmlIO.writeConfig( file, speakers );
+    }
 }
 
 // save content of data to desktop in fileName, format: SpkID, x, y, z, gW, gX, gY, ...
 void MainContentComponent::exportGains()
 {
-    // get export file
-    const File file (File::getSpecialLocation (File::userDesktopDirectory).getNonexistentChildFile ("AmbiGains", ".xml"));
+    // pop up file selection window
+    FileChooser fileChooser ("Save Ambisonic gains (.xml)", File(), "*.xml");
     
-    // save gains to xml file
-    xmlIO.writeGains( file, speakers, ambiGains );
+    bool warnOverwrite = true;
+    if( fileChooser.browseForFileToSave( warnOverwrite ) )
+    {
+        // get file
+        File file( fileChooser.getResult() );
+        
+        // save gains to xml file
+        xmlIO.writeGains( file, speakers, ambiGains );
+    }
 }

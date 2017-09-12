@@ -117,7 +117,7 @@ public:
         file.replaceWithText ( data );
         
         // notify user
-        AlertWindow::showMessageBoxAsync( AlertWindow::InfoIcon, "file export", ".xml file saved to desktop", "OK" );
+        AlertWindow::showMessageBoxAsync( AlertWindow::InfoIcon, "file export", ".xml file saved to:\n" + file.getFullPathName(), "OK" );
     }
     
     void writeGains( const File & file, const std::vector<Speaker> & speakers, const Eigen::MatrixXf ambiGains ){
