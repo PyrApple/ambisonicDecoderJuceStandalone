@@ -121,11 +121,11 @@ Eigen::Vector3f SpeakerTreeComponent::getCoords()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-SpeakerTreeItem::SpeakerTreeItem( const Speaker & _speaker, SpeakerTreeItemHolder & _owner ):
+SpeakerTreeItem::SpeakerTreeItem( const Speaker & _speaker, const String & _convention, SpeakerTreeItemHolder & _owner ):
 owner(_owner)
 {
     speaker = _speaker;
-    convention = "aed";
+    convention = _convention;
 }
 
 SpeakerTreeComponent* SpeakerTreeItem::createItemComponent()
@@ -158,11 +158,11 @@ bool SpeakerTreeItemHolder::mightContainSubItems()
     return getNumSubItems() != 0;
 }
 
-void SpeakerTreeItemHolder::addSpkItem( const Speaker & speaker, bool overwriteId )
+void SpeakerTreeItemHolder::addSpkItem( const Speaker & speaker, const String & convention, bool overwriteId )
 {
     Speaker spk = { speaker.id, speaker.aed };
     if( overwriteId ){ spk.id = getNumSubItems(); }
-    addSubItem( new SpeakerTreeItem( spk, *this ) );
+    addSubItem( new SpeakerTreeItem( spk, convention, *this ) );
 }
 
 void SpeakerTreeItemHolder::removeSpkItem( int itemId )
@@ -205,16 +205,26 @@ void SpeakerTree::setConfiguration( const std::vector<Speaker> & speakers )
     SpeakerTreeItemHolder * root = dynamic_cast <SpeakerTreeItemHolder *> (tree.getRootItem());
     
     // loop over speakers and add leaves to tree
+    String convention = "aed";
     for( int i = 0; i < speakers.size(); i++ ){
-        root->addSpkItem( speakers[i], false );
+        root->addSpkItem( speakers[i], convention, false );
     }
 }
 
 void SpeakerTree::addSpkItem()
 {
     SpeakerTreeItemHolder * root = dynamic_cast <SpeakerTreeItemHolder *> (tree.getRootItem());
+    // define new speaker
     Speaker spk = { 0, Eigen::Vector3f (0,0,1) };
-    root->addSpkItem( spk, true );
+    String convention = "aed"; // default convention
+    // get last speaker convention / coord
+    if( root->getNumSubItems() > 0 ){
+        SpeakerTreeItem * item = dynamic_cast <SpeakerTreeItem *> (root->getSubItem( root->getNumSubItems() - 1 ));
+        convention = item->convention;
+        spk = { 0, item->speaker.aed };
+    }
+    // add speaker to tree
+    root->addSpkItem( spk, convention, true );
 }
 
 void SpeakerTree::clear()

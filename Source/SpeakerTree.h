@@ -57,7 +57,7 @@ public:
     Speaker speaker;
     String convention;
     
-    SpeakerTreeItem( const Speaker & speaker, SpeakerTreeItemHolder & _owner );
+    SpeakerTreeItem( const Speaker & _speaker, const String & _convention, SpeakerTreeItemHolder & _owner );
     
     SpeakerTreeComponent* createItemComponent() override;
     void buttonClicked( Button* button ) override;
@@ -81,7 +81,7 @@ public:
     void paintItem(Graphics& g, int width, int height) override;
     bool mightContainSubItems() override;
     
-    void addSpkItem( const Speaker & speaker, bool overwriteId );
+    void addSpkItem( const Speaker & speaker, const String & convention, bool overwriteId );
     void removeSpkItem( int itemId );
     
 private:
