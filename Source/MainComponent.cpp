@@ -81,16 +81,31 @@ void MainContentComponent::paint( Graphics& g )
     g.setColour( colourMain );
     g.drawText( "Ambisonic decode gains", margin, logTextBox.getY()-15.f, 140, 10, Justification::left );
     
+    // add labels above spk tree (spk tree comp margin and the like taken from SpeakerTreeComponent::resized)
+    g.setFont(12);
+    float y = speakerTree.getY() - margin;
+    int margin2 = 10.f;
+    float x = speakerTree.getX() + margin2;
+    int w = 70.f;
+    g.drawText( "speaker ID", x, y, 120 , 10, Justification::left );
+    x += w + margin;
+    g.drawText( "convention", x, y, 120 , 10, Justification::left );
+    x += 1.15*w + margin2;
+    g.drawText( "X(m)/azim(deg)", x, y, 80 , 10, Justification::left );
+    x += 1.15*w + margin2;
+    g.drawText( "Y(m)/elev(deg)", x, y, 80 , 10, Justification::left );
+    x += 1.15*w + margin2;
+    g.drawText( "Z(m)/dist(m)", x, y, 80 , 10, Justification::left );
+    
     // images (logos) and credits
     g.setFont(10);
     g.drawText("Designed by D. Poirier-Quinot, Dyson School of Design and Engineering, Imperial College, 2017", margin, getHeight()-15.f, getWidth()-2*margin, 5, Justification::right);
     
     // skip logos if not enought width
     if( getWidth() < logoIclImage.getWidth()*3 ){ return; }
-    float y = speakerTree.getY() - margin;
-    float x = getWidth() - margin - logoIclImage.getWidth();
-    g.drawImageAt( logoIclImage, x, y - logoIclImage.getHeight()/2);
-    g.drawImageAt( logo3dtiImage, x - margin - logo3dtiImage.getWidth(), y - logo3dtiImage.getHeight()/2);
+    // draw logos
+    g.drawImageAt( logoIclImage, getWidth() - margin - logoIclImage.getWidth(), y - logoIclImage.getHeight()/2);
+    g.drawImageAt( logo3dtiImage, margin, getHeight() - logo3dtiImage.getHeight() - 10.f);
 }
 
 void MainContentComponent::resized()
@@ -107,7 +122,7 @@ void MainContentComponent::resized()
     
     // speaker tree
     float y = 2*margin + openConfigButton.getY() + openConfigButton.getHeight();
-    float yRemain = getHeight() - y - 3*margin;
+    float yRemain = getHeight() - y - 4*margin;
     speakerTree.setBounds(2*margin, y, getWidth() - 3*margin, 0.5*yRemain);
     addSpkButton.setBounds( margin, y, 20, 20 );
     

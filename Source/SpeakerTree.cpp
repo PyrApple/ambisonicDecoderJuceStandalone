@@ -53,7 +53,7 @@ void SpeakerTreeComponent::resized()
     int w = 70;
     int h = 20;
     int margin = 10;
-    int offset = 60 + margin;
+    int offset = margin;
     id.setBounds(offset, 0, w, h);
     offset += w + margin;
     convention.setBounds(offset, 0, w, h);
@@ -69,7 +69,6 @@ void SpeakerTreeComponent::resized()
 void SpeakerTreeComponent::paint (Graphics& g)
 {
     g.setColour(colourMain);
-    g.drawText("speaker", 0, 0, 60, 20, Justification::left);
 }
 
 void SpeakerTreeComponent::comboBoxChanged (ComboBox *comboBoxThatHasChanged)
